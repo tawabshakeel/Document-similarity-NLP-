@@ -1,6 +1,5 @@
 import nltk as nt
 
-
 def countingAllWords(str):
     counts = dict()
     for line in open ('books/'+str, 'r', encoding="utf8"):
@@ -41,9 +40,30 @@ def separating_nouns_and_verbs(book) :
                 else:
                     verbs[word] = 1
                     print(" not containing")
-
-
     return (nouns ,verbs)
 
 #nouns,verbs=separating_nouns_and_verbs('4300-0.txt')
+
+
+def total_verbs_and_nouns(book):
+    File = open('books/' + book, encoding='utf8')  # open file
+    lines = File.read()  # read all lines
+    sentences = nt.sent_tokenize(lines)  # tokenize sentences
+    count = dict()  # empty to array to hold all nouns
+    count["Nouns"]=0
+    count["Verb"]=0
+    count["document"]=book;
+
+    for sentence in sentences:
+        for word, pos in nt.pos_tag(nt.word_tokenize(str(sentence))):
+            if (pos == 'NN' or pos == 'NNP' or pos == 'NNS' or pos == 'NNPS'):
+                count["Nouns"] += 1
+            elif(pos == 'VBP' or pos == 'VB' or pos == 'VBZ'):
+                count["Verb"] +=1
+
+
+    return count
+
+
+print(total_verbs_and_nouns('4300-0.txt'))
 
