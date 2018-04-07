@@ -1,5 +1,4 @@
 import nltk as nt
-
 def countingAllWords(str):
     counts = dict()
     for line in open ('books/'+str, 'r', encoding="utf8"):
@@ -65,5 +64,5 @@ def total_verbs_and_nouns(book):
     return count
 
 
-print(total_verbs_and_nouns('4300-0.txt'))
+# print(total_verbs_and_nouns('4300-0.txt'))
 

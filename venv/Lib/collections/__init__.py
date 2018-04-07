@@ -413,7 +413,7 @@ def namedtuple(typename, field_names, *, verbose=False, rename=False, module=Non
             raise ValueError('Encountered duplicate field name: %r' % name)
         seen.add(name)
 
-    # Fill-in the class template
+    # Fill-in the class templates
     class_definition = _class_template.format(
         typename = typename,
         field_names = tuple(field_names),
@@ -425,7 +425,7 @@ def namedtuple(typename, field_names, *, verbose=False, rename=False, module=Non
                                for index, name in enumerate(field_names))
     )
 
-    # Execute the template string in a temporary namespace and support
+    # Execute the templates string in a temporary namespace and support
     # tracing utilities by setting a value for frame.f_globals['__name__']
     namespace = dict(__name__='namedtuple_%s' % typename)
     exec(class_definition, namespace)
