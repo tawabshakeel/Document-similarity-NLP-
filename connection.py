@@ -67,32 +67,55 @@ def word_count(book_id):
 
         else:
             print("some data missing")
-            book1=   db.words.find_one({'books_id':'1'})
-            book2 = db.words.find_one({'books_id': '2'})
-            book3 = db.words.find_one({'books_id': '3'})
+            book1=  db.words.find_one({'book_id':'1'})
+            book2 = db.words.find_one({'book_id': '2'})
+            book3 = db.words.find_one({'book_id': '3'})
             print(book1)
             combined_data=dict()
             if book1 is None :
                 print("none")
                 data = main.countingAllWords("1" + ".txt")
                 combined_data["1"]=data
-                mongoQuery("1", data, 1, 0, 0, 0, 0)
+                mongoQuery("1", data, 0, 0, 0, 0, 0)
             else:
-                combined_data["1"]=json.loads(book1["words"]);
+                print("book1 exist")
+                if book1["words"]:
+                    print("book1 words exist")
+                    combined_data["1"]=json.loads(book1["words"]);
+                else:
+                    print("book1 words dont exist")
+                    data = main.countingAllWords("1" + ".txt")
+                    combined_data["1"] = data
+                    mongoQuery("1", data, 1, 0, 0, 0, 0)
 
             if book2 is None :
+                print("book2 dont exist")
                 data = main.countingAllWords("2" + ".txt")
                 combined_data["2"] = data
-                mongoQuery("2", data, 1, 0, 0, 0, 0)
+                mongoQuery("2", data, 0, 0, 0, 0, 0)
             else:
-                combined_data["2"] = json.loads(book2["words"]);
+                print("book2 exist")
+                if book2["words"] :
+                    print("book2 words exist")
+                    combined_data["2"] = json.loads(book2["words"]);
+                else:
+                    print("book2 words dont exist")
+                    data = main.countingAllWords("2" + ".txt")
+                    combined_data["2"] = data
+                    mongoQuery("2", data, 1, 0, 0, 0, 0)
 
             if book3 is None:
                 data = main.countingAllWords("3" + ".txt")
                 combined_data["3"] = data
-                mongoQuery("3", data, 1, 0, 0, 0, 0)
+                mongoQuery("3", data, 0, 0, 0, 0, 0)
             else:
-                combined_data["3"] = json.loads(book3["words"]);
+                if book2["words"] :
+                    combined_data["3"] = json.loads(book3["words"]);
+                else:
+                    data = main.countingAllWords("3" + ".txt")
+                    combined_data["3"] = data
+                    mongoQuery("3", data, 1, 0, 0, 0, 0)
+
 
             A = Counter(combined_data["1"])
             B = Counter(combined_data["2"])
@@ -103,7 +126,7 @@ def word_count(book_id):
 
 @app.route("/verbs_count/<book_id>")
 def Verbs_Nouns_Count(book_id):
-    if book_id != 'All':
+    if book_id != 'all':
         query = db.words.find_one({'book_id': book_id})
         if query:
             if query["verbs"]:
@@ -127,8 +150,61 @@ def Verbs_Nouns_Count(book_id):
 
 
     else:
-        print("All")
+        print("some data missing")
+        book1 = db.words.find_one({'book_id': '1'})
+        book2 = db.words.find_one({'book_id': '2'})
+        book3 = db.words.find_one({'book_id': '3'})
+        print(book1)
+        combined_data = dict()
+        if book1 is None:
+            print("none")
+            data = main.countingAllWords("1" + ".txt")
+            combined_data["1"] = data
+            mongoQuery("1", data, 0, 0, 0, 0, 0)
+        else:
+            print("book1 exist")
+            if book1["words"]:
+                print("book1 words exist")
+                combined_data["1"] = json.loads(book1["words"]);
+            else:
+                print("book1 words dont exist")
+                data = main.countingAllWords("1" + ".txt")
+                combined_data["1"] = data
+                mongoQuery("1", data, 1, 0, 0, 0, 0)
 
+        if book2 is None:
+            print("book2 dont exist")
+            data = main.countingAllWords("2" + ".txt")
+            combined_data["2"] = data
+            mongoQuery("2", data, 0, 0, 0, 0, 0)
+        else:
+            print("book2 exist")
+            if book2["words"]:
+                print("book2 words exist")
+                combined_data["2"] = json.loads(book2["words"]);
+            else:
+                print("book2 words dont exist")
+                data = main.countingAllWords("2" + ".txt")
+                combined_data["2"] = data
+                mongoQuery("2", data, 1, 0, 0, 0, 0)
+
+        if book3 is None:
+            data = main.countingAllWords("3" + ".txt")
+            combined_data["3"] = data
+            mongoQuery("3", data, 0, 0, 0, 0, 0)
+        else:
+            if book2["words"]:
+                combined_data["3"] = json.loads(book3["words"]);
+            else:
+                data = main.countingAllWords("3" + ".txt")
+                combined_data["3"] = data
+                mongoQuery("3", data, 1, 0, 0, 0, 0)
+
+        A = Counter(combined_data["1"])
+        B = Counter(combined_data["2"])
+        C = Counter(combined_data["3"])
+        r = A + B + C
+        return render_template("all-data.html", result=r)
 
 
 @app.route("/top_10/<book_id>")

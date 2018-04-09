@@ -12,7 +12,7 @@ def countingAllWords(str):
                 else:
                     counts[word] = 1
     except:
-        print("sdfdfs")
+
         for line in open ('books/'+str, 'r', encoding=None):
           for word in line.split():
               word = word.lower().replace('.','').replace('?','').replace('!','').replace(':','').replace(',','').replace(')','').replace('(','').replace(';','').replace('"','').replace('*','').replace('[','').replace(']','').replace('_','')
