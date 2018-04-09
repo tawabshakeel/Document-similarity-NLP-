@@ -14,15 +14,45 @@
 </head>
 <body>
 <div class="container" style="text-align: center">
-<h1>Counting number of words in {{book}} </h1>
-<table>
-{% for key, value in result.items() %}
+<h1>Counting number of verbs / nouns in {{book}} </h1>
+    <div class="row">
+        <div class="col-sm-4">
+      Verbs
+            <table>
+{% for key, value in verbs.items() %}
    <tr>
         <th> {{ key }} </th>
         <td> {{ value }} </td>
    </tr>
 {% endfor %}
 </table>
+
+  </div>
+  <div class="col-sm-6">
+           Nouns
+      <table>
+{% for key, value in nouns.items() %}
+   <tr>
+        <th> {{ key }} </th>
+        <td> {{ value }} </td>
+   </tr>
+{% endfor %}
+</table>
+
+  </div>
+  <div class="col-sm-2">
+      <table>
+          count
+{% for key, value in count.items() %}
+   <tr>
+        <th> {{ key }} </th>
+        <td> {{ value }} </td>
+   </tr>
+{% endfor %}
+</table>
+  </div>
+</div>
+
 </div>
 </body>
 </html>
