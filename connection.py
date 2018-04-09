@@ -2,7 +2,7 @@ from flask import Flask,render_template
 from pymongo import MongoClient
 import main
 import json
-
+from collections import Counter
 client = MongoClient('localhost:27017')
 db = client.connectavo
 
@@ -16,7 +16,7 @@ def home():
 @app.route("/words_count/<book_id>")
 def word_count(book_id):
 
-    if book_id !='All':
+    if book_id !='all':
         query = db.words.find_one({'book_id': book_id})
         if query:
             if query["words"]:
@@ -38,9 +38,67 @@ def word_count(book_id):
             except IOError:
                 print("Error")
     else:
-        data = main.countingAllWords(book_id + ".txt")
+        query = db.words.count()
+        all_data=dict()
+        if query == 3:
+            result=db.words.find();
+            for document in result:
+               if document["words"]:
+                    if document["book_id"] == "1":
+                        all_data[document["book_id"]] = json.loads(document["words"])
+
+                    elif document["book_id"] == "2":
+                        all_data[document["book_id"]] = json.loads(document["words"])
+
+                    elif document["book_id"] == "3":
+                        all_data[document["book_id"]] = json.loads(document["words"])
+               else :
+                    data = main.countingAllWords(document["books_id"] + ".txt")
+                    all_data[document["books_id"]]=data
+                    mongoQuery(book_id, data, 1, 0, 0, 0, 0)
 
 
+            A = Counter(all_data["1"])
+            B = Counter(all_data["2"])
+            C = Counter(all_data["3"])
+            r = A + B + C
+            # print(r)
+            return render_template("all-data.html", result=r)
+
+        else:
+            print("some data missing")
+            book1=   db.words.find_one({'books_id':'1'})
+            book2 = db.words.find_one({'books_id': '2'})
+            book3 = db.words.find_one({'books_id': '3'})
+            print(book1)
+            combined_data=dict()
+            if book1 is None :
+                print("none")
+                data = main.countingAllWords("1" + ".txt")
+                combined_data["1"]=data
+                mongoQuery("1", data, 1, 0, 0, 0, 0)
+            else:
+                combined_data["1"]=json.loads(book1["words"]);
+
+            if book2 is None :
+                data = main.countingAllWords("2" + ".txt")
+                combined_data["2"] = data
+                mongoQuery("2", data, 1, 0, 0, 0, 0)
+            else:
+                combined_data["2"] = json.loads(book2["words"]);
+
+            if book3 is None:
+                data = main.countingAllWords("3" + ".txt")
+                combined_data["3"] = data
+                mongoQuery("3", data, 1, 0, 0, 0, 0)
+            else:
+                combined_data["3"] = json.loads(book3["words"]);
+
+            A = Counter(combined_data["1"])
+            B = Counter(combined_data["2"])
+            C = Counter(combined_data["3"])
+            r = A + B + C
+            return render_template("all-data.html", result=r)
 
 
 @app.route("/verbs_count/<book_id>")
@@ -61,11 +119,7 @@ def Verbs_Nouns_Count(book_id):
                 return render_template("verbs_nouns.html", nouns=nouns, verbs=verbs,count=count, book=book_id)
 
         else:
-            print("no data")
             nouns,verbs = main.separating_nouns_and_verbs(book_id + ".txt")
-            print(nouns)
-            print("verbs")
-            print(verbs)
             count = main.total_verbs_and_nouns(book_id + ".txt")
             mongoQuery(book_id, 0, 0, 1, nouns,verbs,count)
             return render_template("verbs_nouns.html", nouns=nouns, verbs=verbs,count=count, book=book_id)

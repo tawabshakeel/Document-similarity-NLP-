@@ -1,4 +1,5 @@
 import nltk as nt
+from collections import Counter
 def countingAllWords(str):
     counts = dict()
     try:
@@ -80,3 +81,20 @@ def total_verbs_and_nouns(book):
     return count
 
 
+def combineDic():
+    a=dict()
+    b=dict()
+
+    a["abc"]=2
+    a["def"]=5
+
+    b["abc"]=1
+    b["def"]=3
+    b["hello"]=1
+    A=Counter(a)
+    B=Counter(b)
+    r=A + B
+
+
+
+combineDic()
