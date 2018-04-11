@@ -1,7 +1,8 @@
 import nltk as nt
 from collections import Counter
-import  json
-from collections import OrderedDict
+import gensim
+from nltk.tokenize import word_tokenize
+import operator
 def countingAllWords(name):
     counts = dict()
     try:
@@ -104,7 +105,7 @@ def combineDic():
     r=A + B
 
 
-
+#nestedDIc is a function just to check the working of dictionary
 def nestedDic():
     my_dict=dict()
     new_dic=dict()
@@ -128,4 +129,33 @@ def nestedDic():
     print(my_dict)
 
 
-#nestedDic()
+def sentence_similarity(book):
+    try:
+        File = open('books/'+book,encoding = "ISO-8859-1")  # open file
+    except:
+        File = open('books/' + book, encoding=None)
+    lines = File.read()  # read all lines
+    # ''.join(filter(str.isalpha, word))
+    sentences = nt.sent_tokenize(lines)
+    gen_docs = [[ "".join(filter(str.isalpha,w.lower()))  for w in word_tokenize(text)]
+                for text in sentences]
+
+
+    print(gen_docs)
+    dictionary = gensim.corpora.Dictionary(gen_docs)
+    corpus = [dictionary.doc2bow(gen_doc) for gen_doc in gen_docs]
+    tf_idf = gensim.models.TfidfModel(corpus)
+
+    sims = gensim.similarities.Similarity('books/', tf_idf[corpus],
+                                          num_features=len(dictionary))
+    query_doc = [w.lower() for w in word_tokenize("my name is tawab.")]
+    query_doc_bow = dictionary.doc2bow(query_doc)
+    query_doc_tf_idf = tf_idf[query_doc_bow]
+
+    index, value = max(enumerate(sims[query_doc_tf_idf]), key=operator.itemgetter(1))
+    min_index, min_value = min(enumerate(sims[query_doc_tf_idf]), key=operator.itemgetter(1))
+
+    print("Most similar sentence"+sentences[index])
+    print("Most dissimilar sentence"+sentences[min_index])
+sentence_similarity("1.txt")
+
