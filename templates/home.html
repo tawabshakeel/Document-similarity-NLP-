@@ -83,8 +83,14 @@
         </li>
         <br>
          <li>
-             <form action="http://127.0.0.1:5000/compare/">
-  Type your own string: <input type="text" name="data"><br>
+             <form action="{{url_for('user_similar_sentence')}}" >
+  Type your own string:<br>
+                 <input type="text" name="data" required >
+  <select name="book_name" id="book_name">
+  <option autofocus value="1">Book1</option>
+  <option value="2">Book2</option>
+  <option value="3">Book3</option>
+  </select>
   <input type="submit" value="Submit">
 </form>
         </li>

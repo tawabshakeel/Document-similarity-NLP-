@@ -17,7 +17,7 @@
 <h1>Counting number of verbs / nouns in All books </h1>
     <div class="row">
         <div class="col-sm-4">
-      Verbs
+     <b> Verbs</b>
             <table>
 {% for key, value in verbs.items() %}
    <tr>
@@ -29,7 +29,7 @@
 
   </div>
   <div class="col-sm-6">
-           Nouns
+           <b>Nouns</b>
       <table>
 {% for key, value in nouns.items() %}
    <tr>
@@ -42,7 +42,7 @@
   </div>
   <div class="col-sm-2">
       <table>
-          count
+          <b>count</b>
 {% for key, value in count.items() %}
    <tr>
         <th> {{ key }} </th>

@@ -1,4 +1,4 @@
-from flask import Flask,render_template
+from flask import Flask,render_template,request
 from pymongo import MongoClient
 import main
 import json
@@ -241,6 +241,15 @@ def Verbs_Nouns_Count(book_id):
 @app.route("/top_10/<book_id>")
 def Similar_Sentences(book_id):
    return render_template("home.html")
+
+@app.route("/user_similar_sentence",methods=['GET'])
+def user_similar_sentence():
+    book_id=request.args.get("book_name")
+    string=request.args.get("data")
+    similar,dissimlar= main.sentence_similarity(book_id+".txt",string)
+    print("returning data")
+    print(similar)
+    return render_template("user_sentence_similarity.html",book=book_id,sentence=string,similar=similar,dissimilar=dissimlar)
 
 
 
