@@ -3,8 +3,8 @@ from pymongo import MongoClient
 import main
 import json
 from collections import Counter
-client = MongoClient('localhost:27017')
-db = client.connectavo
+client = MongoClient('localhost:27017') # Mongo Client created
+db = client.connectavo # connectavo is database name
 
 
 app = Flask(__name__)
@@ -13,97 +13,90 @@ app = Flask(__name__)
 def home():
    return render_template("home.html")
 
-@app.route("/words_count/<book_id>")
+
+# receives book_id 1,2,3 or can contains all
+@app.route("/words_count/<book_id>") # Route 2 returns the word_count list
 def word_count(book_id):
 
-    if book_id !='all':
-        query = db.words.find_one({'book_id': book_id})
-        if query:
-            if query["words"]:
-                print("containing ")
+    if book_id !='all':     # check whether book_id  don't contains all
+        query = db.words.find_one({'book_id': book_id})     # find complete collection with respect to book_id
+        if query:   # if data is present in database
+            if query["words"]:   # if words_count dictionary is present in database
                 result = query["words"]
-                result = json.loads(result)
-                return render_template("table.html", result=result, book=book_id)
-            else:
-                data = main.countingAllWords(book_id + ".txt")
-                mongoQuery(book_id,data,1,0,0,0,0)
+                result = json.loads(result)     # unstringify the string into dictionary
+                return render_template("table.html", result=result, book=book_id)   # sending the dictionary to table.html where words_count would be printed in loop
+            else: # if words_count is not present
+                data = main.countingAllWords(book_id + ".txt")  # calling function written in main.py to calculate the word_count with respect to book_id
+                mongoQuery(book_id,data,1,0,0,0,0)          # updating words against book_id in the database so that next time no need to call the main function again
                 return render_template("table.html", result=data, book=book_id)
         else:
-            print("empty")
-            try:
-                data =main.countingAllWords(book_id+".txt")
-                mongoQuery(book_id, data, 0, 0,0,0,0)
+            try: # in case if no data is present in the database against book_id
+                data =main.countingAllWords(book_id+".txt") # calling the main function to calculate word count
+                mongoQuery(book_id, data, 0, 0,0,0,0) #inserting new record against book_id
                 return render_template("table.html", result=data, book=book_id)
 
-            except IOError:
+            except IOError: # exception in case of error in inserting in the db
                 print("Error")
-    else:
-        query = db.words.count()
-        all_data=dict()
-        if query == 3:
-            result=db.words.find();
-            for document in result:
-               if document["words"]:
+    else:# if the book_id contains all --> means user want to see all books words count merge together
+        query = db.words.count() #counting the collection. If user has visiting all books word_count individually then the count would be 3 otherwise it would be less than 3
+        all_data=dict() # dictaionary with a name of all_data to store every book total word_count
+        if query == 3: # if all data is in the database
+            result=db.words.find(); # find all three collections
+            for document in result: # traversing the all three collection
+               if document["words"]: # if words exist for each book
                     if document["book_id"] == "1":
-                        all_data[document["book_id"]] = json.loads(document["words"])
+                        all_data[document["book_id"]] = json.loads(document["words"]) # storing word_count of book 1 in all_data dict
 
                     elif document["book_id"] == "2":
-                        all_data[document["book_id"]] = json.loads(document["words"])
+                        all_data[document["book_id"]] = json.loads(document["words"]) # storing word_count of book 2 in all_data dict
 
                     elif document["book_id"] == "3":
-                        all_data[document["book_id"]] = json.loads(document["words"])
-               else :
-                    data = main.countingAllWords(document["book_id"] + ".txt")
-                    all_data[document["book_id"]]=data
-                    mongoQuery(book_id, data, 1, 0, 0, 0, 0)
+                        all_data[document["book_id"]] = json.loads(document["words"]) # storing word_count of book 3 in all_data dict
+
+               else : # for any book_id word_count is not present
+                    data = main.countingAllWords(document["book_id"] + ".txt") # main function is called to find word_count for that book_id
+                    all_data[document["book_id"]]=data # store word_count in the all_data dict
+                    mongoQuery(book_id, data, 1, 0, 0, 0, 0) # update the database and store word_count for that book_id
 
 
-            A = Counter(all_data["1"])
+            A = Counter(all_data["1"]) # combining all books word_count togther
             B = Counter(all_data["2"])
             C = Counter(all_data["3"])
-            r = A + B + C
-            # print(r)
-            return render_template("all-data.html", result=r)
+            r = A + B + C # if book1 contains {"apple":"2"} if book 2 contains {"apple":"3"} and book 3 contains {"apple":"4"} now total would be {"apple":"9"}
 
-        else:
-            print("some data missing")
-            book1=  db.words.find_one({'book_id':'1'})
+            return render_template("all-data.html", result=r) # data is send to all-data html to print total word_count
+
+        else: # if all data is not present in database --> count is less than 3
+            book1 = db.words.find_one({'book_id':'1'}) # all books data is fetched from db
             book2 = db.words.find_one({'book_id': '2'})
             book3 = db.words.find_one({'book_id': '3'})
-            print(book1)
+
             combined_data=dict()
-            if book1 is None :
-                print("none")
-                data = main.countingAllWords("1" + ".txt")
-                combined_data["1"]=data
-                mongoQuery("1", data, 0, 0, 0, 0, 0)
-            else:
-                print("book1 exist")
-                if book1["words"]:
-                    print("book1 words exist")
-                    combined_data["1"]=json.loads(book1["words"]);
-                else:
-                    print("book1 words dont exist")
-                    data = main.countingAllWords("1" + ".txt")
-                    combined_data["1"] = data
-                    mongoQuery("1", data, 1, 0, 0, 0, 0)
+            if book1 is None : # if book1 collection is empty
+                data = main.countingAllWords("1" + ".txt") # main function is called to find word_count
+                combined_data["1"]=data # data is stored in combined_data dict
+                mongoQuery("1", data, 0, 0, 0, 0, 0) # data is inserted in the db also
+            else: # if book 1 data is not empty
+                if book1["words"]: # if book 1 word_count is not empty
+                    combined_data["1"]=json.loads(book1["words"]); #data is stored in combined_data dict no need to call db because data is already stored in db
 
-            if book2 is None :
-                print("book2 dont exist")
-                data = main.countingAllWords("2" + ".txt")
-                combined_data["2"] = data
-                mongoQuery("2", data, 0, 0, 0, 0, 0)
-            else:
-                print("book2 exist")
-                if book2["words"] :
-                    print("book2 words exist")
-                    combined_data["2"] = json.loads(book2["words"]);
-                else:
-                    print("book2 words dont exist")
-                    data = main.countingAllWords("2" + ".txt")
-                    combined_data["2"] = data
-                    mongoQuery("2", data, 1, 0, 0, 0, 0)
+                else:# if book 1 word_count is empty
+                    data = main.countingAllWords("1" + ".txt") #main function is called to find word_count
+                    combined_data["1"] = data # data is stored in combined_data dict
+                    mongoQuery("1", data, 1, 0, 0, 0, 0) # data is updated in the db
 
+            if book2 is None : # if book2 collection is empty
+                data = main.countingAllWords("2" + ".txt") #main function is called to find word_count
+                combined_data["2"] = data # data is stored in combined_data dict
+                mongoQuery("2", data, 0, 0, 0, 0, 0) # data is inserted in the db
+            else:
+                if book2["words"] : # if book 2 word_count is not empty
+                    combined_data["2"] = json.loads(book2["words"]);# data is stored in combined_data dict no need to call db because data is already stored in db
+                else: # if book  2 word_count is empty
+                    data = main.countingAllWords("2" + ".txt") ##main function is called to find word_count
+                    combined_data["2"] = data # data is stored in combined_data dict
+                    mongoQuery("2", data, 1, 0, 0, 0, 0) # data is updated in the db
+          # same check in case of book 3
             if book3 is None:
                 data = main.countingAllWords("3" + ".txt")
                 combined_data["3"] = data
@@ -117,12 +110,13 @@ def word_count(book_id):
                     mongoQuery("3", data, 1, 0, 0, 0, 0)
 
 
-            A = Counter(combined_data["1"])
+            A = Counter(combined_data["1"]) # combining all books word_count togther
             B = Counter(combined_data["2"])
             C = Counter(combined_data["3"])
             r = A + B + C
             return render_template("all-data.html", result=r)
 
+# Route 3 to find verb_nouns_count in the book
 
 @app.route("/verbs_count/<book_id>")
 def Verbs_Nouns_Count(book_id):
