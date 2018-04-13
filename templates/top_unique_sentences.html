@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connectavo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="container" style="text-align: center">
+<h1>Top 10 similar and Unique words in {{book}} </h1>
+    <div class="row">
+  <div class="col-sm-6">
+      <h3>Unique Sentences</h3>
+<table>
+{% for key, value in unique.items() %}
+
+       <strong><td> {{ key }}:- </td></strong>
+
+        <td> {{ value }} </td>
+   </tr>
+{% endfor %}
+</table>
+
+  </div>
+  <div class="col-sm-6">
+      <h3>Similar Sentences</h3>
+<table>
+{% for key, value in similar.items() %}
+   <tr>
+        <strong><td> {{ key }} </td></strong>
+
+        <td> {{ value }} </td>
+   </tr>
+{% endfor %}
+</table>
+
+  </div>
+</div>
+
+
+</div>
+</body>
+</html>

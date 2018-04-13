@@ -128,7 +128,6 @@ def sentence_similarity(book,string):
 
 #sentence_similarity("1.txt","hello i am tawab")
 def sentence_similarity_matrix(book):
-    print("hello in funciton")
     try:
         File = open('books/' + book, encoding="ISO-8859-1")  # open file
     except:
@@ -136,9 +135,7 @@ def sentence_similarity_matrix(book):
     lines = File.read()  # read all lines
 
     sentences = nt.sent_tokenize(lines)  # tokenizing document using nltk into sentences
-    sentences = [s.lower() for s in sentences if len(s) > 2 and  not s.isdigit()]
-    print(sentences)
-    print("hello after sentences")
+    sentences = [s.lower() for s in sentences if len(s) > 10 and  not s.isdigit()]
 
     gen_docs = [["".join(filter(str.isalpha, w.lower())) for w in nt.word_tokenize(text)  ]
                 # list of sentences with each sentences is list of tokens word_tokenzie()--> provides listof tokens
@@ -162,28 +159,16 @@ def sentence_similarity_matrix(book):
             #   abc[idx] = index
     min_index=heapq.nsmallest(10,range(len(scores)),scores.get)
     max_index=heapq.nlargest(10,range(len(scores)),scores.get)
-    print("min index")
-    print(min_index)
-    print("max index")
-    print(max_index)
     similar_sentences=dict()
     dis_similar_sentences=dict()
     for idx,index in enumerate(min_index):
-        print(index)
-        print(sentences[index])
-        dis_similar_sentences[idx]=sentences[index]
+         dis_similar_sentences[idx+1]=sentences[index]
 
     for idx,index in enumerate(max_index):
-        print(sentences[index])
-        similar_sentences[idx]=sentences[index]
-
-    print("dis-similar sentences ")
-    print(dis_similar_sentences)
-    print("similar sentences")
-    print(similar_sentences)
+         similar_sentences[idx+1]=sentences[index]
+    return dis_similar_sentences,similar_sentences
 
 
-sentence_similarity_matrix("2.txt")
 
 
 

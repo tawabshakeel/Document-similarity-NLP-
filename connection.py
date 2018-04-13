@@ -234,7 +234,23 @@ def Verbs_Nouns_Count(book_id):
 
 @app.route("/top_10/<book_id>")
 def Similar_Sentences(book_id):
-   return render_template("home.html")
+    query = db.unique.find_one({'book_id': book_id})
+    if query:
+        if query["unique"]:
+            result = query["unique"]
+            result2 = query["similar"]
+            result = json.loads(result)
+            result2 = json.loads(result2)# unstringify the string into dictionary
+            return render_template("top_unique_sentences.html", unique=result,similar=result2,book=book_id)  # sending the dictionary to table.html where words_count would be printed in loop
+        else:
+            unique,similar=main.sentence_similarity_matrix(book_id+".txt")
+            mongo_Query_for_top_umique_sentences(book_id,unique,similar)
+            return render_template("top_unique_sentences.html", unique=unique, similar=similar,book=book_id)  # sending the dictionary to table.html where words_count would be printed in loop
+
+    else:
+        unique, similar = main.sentence_similarity_matrix(book_id+".txt")
+        mongo_Query_for_top_umique_sentences(book_id, unique, similar)
+        return render_template("top_unique_sentences.html", unique=unique, similar=similar, book=book_id)
 
 @app.route("/user_similar_sentence",methods=['GET'])
 def user_similar_sentence():
@@ -295,6 +311,14 @@ def mongoQuery(book_id,data,index,type,nouns,verbs,n_v_count):
                 },
 
             )
+def mongo_Query_for_top_umique_sentences(book_id,unique,similar):
+    db.unique.insert_one(
+        {
+            "book_id": book_id,
+            "unique" :json.dumps(unique),
+            "similar": json.dumps(similar)
+
+        }).inserted_id
 
 
 if __name__ == '__main__':
