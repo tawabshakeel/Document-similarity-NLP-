@@ -12,7 +12,7 @@
 ### Procedure To Run The Code
 - Clone the repository
 - Install all the things mentioned in the Requirements Section
-- Run mongo db using the command  **mongod**  on command line **(Make sure the mongoDb run on port 27017)**
+- Run mongo db using the command  **"mongod"**  on command line **(Make sure the mongoDb run on port 27017)**
 - Open the cloned Directory
-- Run **python connection.py** on command line
+- Run **"python connection.py"** on command line
 - Finally open the link on the browser (http://127.0.0.1:5000)
