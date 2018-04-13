@@ -11,6 +11,10 @@
 -	pip install flask
 -	pip install pymongo
 -	pip install –U nltk
+- >>	import nlkt on python shell
+  >> nltk.dowload(‘punkt’)
+  >>  nltk.download(‘averaged_perceptron_tagger’)
+
 -	pip install – U gensim
 
 
