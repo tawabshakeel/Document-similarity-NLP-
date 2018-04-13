@@ -8,6 +8,11 @@
 - [pip to install packages](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
 - [Mongo Db](https://docs.mongodb.com/manual/installation/) 
 - [Pycharm](https://docs.mongodb.com/manual/installation/) (Not Essential - could run code using commmand Line) 
+-	pip install flask
+-	pip install pymongo
+-	pip install –U nltk
+-	pip install – U gensim
+
 
 ### Procedure To Run The Code
 - Clone the repository
