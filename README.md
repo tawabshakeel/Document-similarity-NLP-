@@ -42,12 +42,12 @@
 
 
 - Counting_words
-![Hello](https://user-images.githubusercontent.com/24355495/38739690-0b86eba0-3f4f-11e8-9236-e04bdb340451.PNG)
+![Hello](https://user-images.githubusercontent.com/24355495/38739710-15b89db2-3f4f-11e8-895a-95ac1917272e.PNG)
 
 
 
 - Total /Merging counts of words of all books
-![Hello](https://user-images.githubusercontent.com/24355495/38739690-0b86eba0-3f4f-11e8-9236-e04bdb340451.PNG)
+![Hello](https://user-images.githubusercontent.com/24355495/38739682-04788cec-3f4f-11e8-9711-d984cb218f5a.PNG)
 
 
 
