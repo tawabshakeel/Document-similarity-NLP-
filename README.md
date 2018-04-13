@@ -22,7 +22,7 @@
 ![Hello](https://user-images.githubusercontent.com/24355495/38740076-11d23cca-3f50-11e8-94a1-83ff970fd2d2.PNG)
 
 
--Running connection.py
+- Running connection.py
 ![Hello](https://user-images.githubusercontent.com/24355495/38740076-11d23cca-3f50-11e8-94a1-83ff970fd2d2.PNG)
 
 
