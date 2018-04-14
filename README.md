@@ -10,6 +10,8 @@
 - [Pycharm](https://docs.mongodb.com/manual/installation/) (Not Essential - could run code using commmand Line) 
 -	pip install flask
 -	pip install pymongo
+- pip install numpy
+- pip install scipy
 -	pip install –U nltk
 - >>	import nlkt on python shell
 -  first write nltk.dowload(‘punkt’)
