@@ -1,4 +1,4 @@
-# Connectavo-Assignment 
+# Document Similarity ( NLP) 
 ### Technology Used
 - Mongo Db
 - Pyhton 3.6 version (Flask)
